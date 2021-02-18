@@ -1,5 +1,5 @@
 const express = require('express');
-const { uuid } = require('uuidv4');
+const { uuid, isUuid } = require('uuidv4');
 const app = express();
 const port = 3333;
 
@@ -7,6 +7,30 @@ const port = 3333;
 app.use(express.json());
 
 const pokemons = [];
+
+function logRequests(req, res, next) {
+  const { method, url } = req;
+
+  const logLabel = `[${method.toUpperCase()}] ${url}`;
+
+  console.time(logLabel);
+
+  next(); //Próximo middleware
+
+  console.timeEnd(logLabel);
+} 
+
+function validatePokemonId(req, res, next) {
+  const { id } = req.params;
+
+  if(!isUuid(id)) {
+    return res.status(400).json({ error: 'Invalid ID' });
+  }
+
+  return next();
+}
+
+app.use('/projects/:id', validatePokemonId);
 
 // get
 app.get('/Pokemons', (req, res) => {
