@@ -1,10 +1,13 @@
 {
   "name": "myFirstNodeJsApi",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "src/index.js",
   "repository": "https://github.com/devsfer1/myFirstNodeJsApi.git",
   "author": "Fernando <fernando.chaves16@hotmail.com>",
   "license": "MIT",
+  "scripts": {
+    "start": "nodemon"
+  },
   "devDependencies": {
     "nodemon": "^2.0.7"
   }
