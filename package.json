@@ -1,0 +1,8 @@
+{
+  "name": "myFirstNodeJsApi",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/devsfer1/myFirstNodeJsApi.git",
+  "author": "Fernando <fernando.chaves16@hotmail.com>",
+  "license": "MIT"
+}
