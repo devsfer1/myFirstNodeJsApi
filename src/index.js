@@ -1,12 +1,14 @@
 const express = require('express');
+const cors = require('cors');
 const { uuid, isUuid } = require('uuidv4');
 const app = express();
 const port = 3333;
 
 // Falar para o Express que a Api vai receber informações no formato JSON
+app.use(cors());
 app.use(express.json());
 
-const pokemons = [];
+const projects = [];
 
 function logRequests(req, res, next) {
   const { method, url } = req;
@@ -20,7 +22,7 @@ function logRequests(req, res, next) {
   console.timeEnd(logLabel);
 } 
 
-function validatePokemonId(req, res, next) {
+function validateProjectId(req, res, next) {
   const { id } = req.params;
 
   if(!isUuid(id)) {
@@ -30,70 +32,70 @@ function validatePokemonId(req, res, next) {
   return next();
 }
 
-app.use('/projects/:id', validatePokemonId);
+app.use('/projects/:id', validateProjectId);
 
 // get
-app.get('/Pokemons', (req, res) => {
+app.get('/projects', (req, res) => {
   const {type} = req.query;
 
   // Verificar se o titulo foi preenchido pelo usuario;
-  const results = type
-    ? pokemons.filter(pokemon => pokemon.type.includes(type))
-    : pokemons;
+  const results = owner
+    ? projects.filter(project => project.owner.includes(owner))
+    : projects;
 
   return res.json(results);
 });
 
 // post
-app.post('/Pokemons', (req, res) => {
-  const {name, type} = req.body;
+app.post('/projects', (req, res) => {
+  const {title, owner} = req.body;
 
-  const pokemon = {id: uuid(), name, type}
+  const project = {id: uuid(), title, owner}
 
-  pokemons.push(pokemon);
+  projects.push(project);
 
-  return res.json(pokemon);
+  return res.json(project);
 })
 
 // put
-app.put('/Pokemons/:id', (req, res) => {
+app.put('/projects/:id', (req, res) => {
   const { id } = req.params;
   const {name, type} = req.body;
 
-  // Procurar Pokemon no array
-  const pokemonIndex = pokemons.findIndex(pokemon => pokemon.id === id);
+  // Procurar Project no array
+  const projectIndex = projects.findIndex(project => project.id === id);
 
   // Se ele não existir: 
-  if(pokemonIndex < 0) {
-    return res.status(400).json({ error: 'Pokemon not found.' })
+  if(projectIndex < 0) {
+    return res.status(400).json({ error: 'Project not found.' })
   }
 
   // Se ele existir:
-  const pokemon = {
+  const project = {
     id,
-    name, 
-    type
+    title, 
+    owner
   }
 
-  pokemons[pokemonIndex] = pokemon;
+  projects[projectIndex] = project;
 
-  return res.json(pokemon)
+  return res.json(project)
 });
 
 // delete
-app.delete('/Pokemons/:id', (req, res) => {
+app.delete('/projects/:id', (req, res) => {
   const { id } = req.params;
 
-  // Procurar Pokemon no array:
-  const pokemonIndex = pokemons.findIndex(pokemon => pokemon.id === id);
+  // Procurar Project no array:
+  const projectIndex = projects.findIndex(project => project.id === id);
 
   // Se ele não existir:
-  if(pokemonIndex < 0) {
-    return res.status(400).json({ error: 'Pokemon not found.' })
+  if(projectIndex < 0) {
+    return res.status(400).json({ error: 'Project not found.' })
   }
 
   // Se ele existir:
-  pokemons.splice(pokemonIndex, 1);
+  projects.splice(projectIndex, 1);
 
   return res.status(204).send();
 });
